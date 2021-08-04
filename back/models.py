@@ -1,0 +1,51 @@
+from django.db import models
+
+
+# Regular Commit Author
+class Author(models.Model):
+    name = models.CharField(max_length=100)  # name
+    email = models.CharField(max_length=100)  # email
+    date = models.DateTimeField()  # date
+
+    def __str__(self):
+        return f'{self.name}@{self.date} ({self.email})'
+
+
+# Regular Commit
+class Commit(models.Model):
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='commits')  # author
+    message = models.CharField(max_length=80)  # message
+    treeUrl = models.URLField()  # tree { url }
+    url = models.URLField()  # url
+    comment_count = models.IntegerField()  # comment
+
+    def __str__(self):
+        return f'{self.author.name}: {self.message}'
+
+
+# GitHub User
+class User(models.Model):
+    name = models.CharField(max_length=100)  # login
+    gitId = models.CharField(max_length=30)  # id
+    avatarUrl = models.URLField()  # avatar_url
+    apiUrl = models.URLField()  # url
+    htmlUrl = models.URLField()  # html_url
+    reposUrl = models.URLField()  # repos_url
+    type = models.CharField(max_length=50)  # type
+
+    def __str__(self):
+        return f'{self.name}. Url: {self.htmlUrl}'
+
+
+# GitHub Commit
+class GitHubCommit(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='gitCommits')  # author
+    committer = models.OneToOneField(User, on_delete=models.PROTECT)  # committer
+    htmlUrl = models.URLField()  # html_url
+    commentsUrl = models.URLField()  # comments_url
+    parents = models.ManyToManyField("self", symmetrical=False)  # parents
+    commit = models.OneToOneField(Commit, on_delete=models.CASCADE)  # commit
+
+    def __str__(self):
+        return f'{self.author.name}: {self.commit}'
+
