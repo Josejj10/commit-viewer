@@ -9,12 +9,23 @@ services:
       - POSTGRES_DB= postgres
       - POSTGRES_USER= postgres
       - POSTGRES_PASSWORD= postgres
-  web:
-    build: .
+  backend:
+    container_name: backend
+    build: ./backend
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - .:/code
+      - ./backend:/backend
     ports:
       - "8000:8000"
     depends_on:
       - db
+  frontend:
+    container_name: frontend
+    build: ./frontend/commit-viewer
+    command: yarn start
+    volumes:
+      - /frontend/src/styles
+      - /frontend/node-modules
+      - ./frontend/commit-viewer:/frontend
+    ports:
+      - 3000:3000
