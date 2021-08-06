@@ -1,22 +1,24 @@
-import React from 'react'
-import { BrowserRouter, Switch, Route } from 'react-router-dom'
-
-import { Navbar } from './components/Navbar'
-import { About } from './pages/About'
-import { Home } from './pages/Home'
+import React from 'react';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import { Container } from 'react-bootstrap';
+import { Navbar } from './components/Navbar';
+import { Home } from './pages/Home';
+import './App.scss';
+import { Commits } from './pages/Commits';
 
 const App: React.FC = () => {
   return (
     <BrowserRouter>
       <Navbar />
-      <div className="container">
+      <Container className="mt-4">
         <Switch>
           <Route path="/" component={Home} exact />
-          <Route path="/about" component={About} />
+          <Route path="/commits" component={Commits} exact />
+          <Redirect to="/" />
         </Switch>
-      </div>
+      </Container>
     </BrowserRouter>
-  )
-}
+  );
+};
 
-export default App
+export default App;

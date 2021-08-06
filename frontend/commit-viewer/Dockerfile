@@ -7,3 +7,11 @@ COPY ./yarn.lock ./
 RUN yarn
 ADD . .  
 EXPOSE 3000
+
+# Final Stage
+# FROM nginx
+
+# EXPOSE 3000
+
+# COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
+# COPY --from=builder /app/build /usr/share/nginx/html

@@ -18,7 +18,11 @@
     // Disable <Fragment> => <> replacement. Feel free to change
     "react/jsx-fragments": "off",
     // Disable prefer default export
-    "import/prefer-default-export": "off"
+    "import/prefer-default-export": "off",
+    // Custom disables
+    "jsx-a11y/label-has-associated-control": "off",
+    "react/jsx-props-no-spreading": "off",
+    "@typescript-eslint/lines-between-class-members": "off"
   },
   "overrides": [
     {
@@ -28,5 +32,8 @@
         "project": ["./tsconfig.json"]
       }
     }
-  ]
+  ],
+  "settings": {
+    "import/core-modules": ["rxjs/operators"]
+  }
 }
