@@ -10,7 +10,7 @@ export const SearchCommits = ({ onSubmitForm, error }: any) => {
   return (
     <Accordion defaultActiveKey="accordion-search" className="my-3">
       <Accordion.Item eventKey="accordion-search">
-        <Accordion.Header>View a different repository</Accordion.Header>
+        <Accordion.Header>Search for a different repository</Accordion.Header>
         <Accordion.Body>
           <p>
             {`This project's architecture lets it be flexible and show commits not only from its repository, but from
@@ -18,7 +18,7 @@ export const SearchCommits = ({ onSubmitForm, error }: any) => {
           </p>
           <Form onSubmit={onSubmit}>
             <Row>
-              <Col xs={4}>
+              <Col xs={4} className="pe-0">
                 <Form.Label>GitHub User</Form.Label>
                 <InputGroup>
                   <InputGroup.Text id="userName-addon">@</InputGroup.Text>
@@ -28,10 +28,10 @@ export const SearchCommits = ({ onSubmitForm, error }: any) => {
                   E.g: facebook, fulltimeforce
                 </Form.Text>
               </Col>
-              <Col>
+              <Col className="ps-0">
                 <Form.Label>GitHub Repo</Form.Label>
                 <InputGroup>
-                  <InputGroup.Text id="repoName-addon">@</InputGroup.Text>
+                  <InputGroup.Text id="repoName-addon">/</InputGroup.Text>
                   <Form.Control id="repoName" name="repoName" type="text" placeholder="commit-viewer" />
                 </InputGroup>
                 <Form.Text id="repoName" muted>
@@ -56,7 +56,7 @@ export const SearchCommits = ({ onSubmitForm, error }: any) => {
             </a>
             .
           </p>
-          {error && <Alert variant="danger">Error: {error.data.message}</Alert>}
+          {error && <Alert variant="danger">Error: {error?.data?.message}</Alert>}
         </Accordion.Body>
       </Accordion.Item>
     </Accordion>

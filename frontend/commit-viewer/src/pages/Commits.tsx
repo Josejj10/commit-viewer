@@ -22,7 +22,8 @@ export const Commits: React.FC = () => {
     dispatch(commitsLoadAction.request(data));
   };
 
-  const selectCommit = (commit: any) => {
+  const selectCommit = (event: any, commit: any) => {
+    event?.stopPropagation();
     setshowModal(true);
     setCurrentCommit(commit);
   };
@@ -30,9 +31,14 @@ export const Commits: React.FC = () => {
   const CommitList = () => {
     if (loading) return <Spinner animation="border" role="status" />;
     return (
-      <Accordion>
+      <Accordion flush>
         {commits.map((commit: IGitCommit, index: number) => (
-          <CommitCard commit={commit} index={index} onClickMore={() => selectCommit(commit)} />
+          <CommitCard
+            key={commit.commit.url}
+            commit={commit}
+            index={index}
+            onClickMore={(event: any) => selectCommit(event, commit)}
+          />
         ))}
       </Accordion>
     );
@@ -45,23 +51,21 @@ export const Commits: React.FC = () => {
         <Breadcrumb.Item active>Commits</Breadcrumb.Item>
       </Breadcrumb>
       <SearchCommits onSubmitForm={onSearchRepo} error={error} />
-      <Row>
-        <Col>
-          <p className="my-0">Currently viewing</p>
-          <h2>{repoName}</h2>
-          <h5 className="mb-1">by: {userName}</h5>
-          <p className="mb-4">
-            View it on{' '}
-            <a target="_blank" rel="noreferrer" href={`https://github.com/${userName}/${repoName}`}>
-              GitHub
-            </a>
-            .
-          </p>
-        </Col>
-      </Row>
       <Tab.Container id="left-tabs-example" defaultActiveKey="react">
-        <Row>
+        <Row className="mt-5">
           <Col sm={3}>
+            <>
+              <p className="my-0">Currently viewing</p>
+              <h2>{repoName}</h2>
+              <h5 className="mb-1">by: {userName}</h5>
+              <p className="mb-4">
+                View it on{' '}
+                <a target="_blank" rel="noreferrer" href={`https://github.com/${userName}/${repoName}`}>
+                  GitHub
+                </a>
+                .
+              </p>
+            </>
             <Nav variant="pills" className="flex-column">
               <Nav.Item>
                 <Nav.Link eventKey="react">Using React</Nav.Link>

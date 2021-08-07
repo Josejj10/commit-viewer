@@ -1,13 +1,47 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
-import { Button, Col, Image, Modal, Spinner, Tab, Tabs } from 'react-bootstrap';
+import { Button, Card, Col, Image, Modal, Row, Spinner, Tab, Tabs } from 'react-bootstrap';
 import { IGitCommit } from '../interfaces/git-commit.interface';
+import { IUser } from '../interfaces/user.interface';
+import { IGitCommitParent } from '../interfaces/commit-parent.interface';
 
 interface CommitModalProps {
   commit: IGitCommit | undefined;
   show: boolean;
   handleClose: any;
 }
+
+export const UserCard = ({ user }: { user: IUser }) => (
+  <Card>
+    <Card.Header>Pushed to GitHub by</Card.Header>
+    <Card.Body>
+      <Row>
+        <Col xs={1} className="me-2">
+          <Image
+            rounded
+            src={user.avatarUrl || 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg'}
+            alt="author-avatar"
+            width={100}
+            className="my-0"
+          />
+        </Col>
+        <Col className="mx-3 my-0">
+          <h4 className="text-dark">
+            {user?.htmlUrl ? (
+              <a href={user?.htmlUrl} rel="noreferrer" target="_blank">
+                {user?.name || 'GitHub API returned null author'}
+              </a>
+            ) : (
+              user?.name || 'GitHub API returned null author'
+            )}
+          </h4>
+          {user?.apiUrl && <p className="my-0">API Url: {user.apiUrl}</p>}
+          {user?.gitId && <p className="my-0">Git Id: {user.gitId}</p>}
+        </Col>
+      </Row>
+    </Card.Body>
+  </Card>
+);
 
 const CommitModal = ({ commit, show, handleClose }: CommitModalProps) => {
   return (
@@ -17,28 +51,86 @@ const CommitModal = ({ commit, show, handleClose }: CommitModalProps) => {
       ) : (
         <>
           <Modal.Header closeButton>
-            <Image rounded src={commit.author.avatarUrl} alt="author-avatar" width={32} className="my-0" />
+            <Image
+              rounded
+              src={
+                commit.author.avatarUrl ||
+                'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg'
+              }
+              alt="author-avatar"
+              width={32}
+              className="my-0"
+            />
             <Col className="mx-3 my-0">
-              <h6 className="text-dark mb-0">{commit.author.name}</h6>
+              <h6 className="text-dark">
+                {commit?.author?.name || commit?.commit?.author?.name || 'API returned null author'}
+              </h6>
               <p className="my-0">{commit.commit.author.date}</p>
             </Col>
           </Modal.Header>
           <Modal.Body>
             <Tabs defaultActiveKey="message" id="modal-tabs" className="my-1">
               <Tab className="py-3 px-2" eventKey="author" title="Author">
-                <Col>{commit.author.htmlUrl}</Col>
+                <>
+                  <UserCard user={commit.author} />
+                  <Card className="mt-3">
+                    <Card.Header>Git commited by</Card.Header>
+                    <Card.Body>
+                      <Row>
+                        <Col className="mx-3 my-0">
+                          <h4 className="text-dark">
+                            {commit?.commit?.author?.name || 'GitHub API returned null author'}
+                          </h4>
+                          {commit?.commit?.author?.email && (
+                            <p className="my-0">Email: {commit?.commit?.author?.email}</p>
+                          )}
+                        </Col>
+                      </Row>
+                    </Card.Body>
+                    <Card.Footer>*Git is different from GitHub</Card.Footer>
+                  </Card>
+                </>
               </Tab>
               <Tab className="py-3 px-2" eventKey="committer" title="Committer">
-                <Col>{commit.committer.htmlUrl}</Col>
+                <UserCard user={commit.committer} />
+                For more info about a git committer you can visit this{' '}
+                <a
+                  href="https://stackoverflow.com/questions/18750808/difference-between-author-and-committer-in-git"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  link
+                </a>
+                .
               </Tab>
               <Tab className="py-3 px-2" eventKey="comments" title="Comments">
-                asfasfsaf
+                API URL: {commit.commentsUrl}
               </Tab>
               <Tab className="py-3 px-2" eventKey="message" title="Message">
                 <ReactMarkdown>{commit.commit.message}</ReactMarkdown>
               </Tab>
               <Tab className="py-3 px-2" eventKey="parents" title="Parents">
-                asfasfsaf
+                This commit was based on:
+                {commit?.parents.map((par: IGitCommitParent, index: number) => (
+                  <Card key={`parent-${par.url}`}>
+                    <Card.Header>Parent #{index}</Card.Header>
+                    <Card.Body>
+                      Api: {par.url}
+                      <a href={par.htmlUrl} target="_blank" rel="noreferrer">
+                        {par.htmlUrl}
+                      </a>
+                    </Card.Body>
+                  </Card>
+                ))}
+                For more info about a git committer you can visit this{' '}
+                <a
+                  href="https://stackoverflow.com/questions/38239521/what-is-the-parent-of-a-git-commit-how-can-there-be-more-than-one-parent-to-a-g"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  link
+                </a>
+                .
               </Tab>
             </Tabs>
           </Modal.Body>

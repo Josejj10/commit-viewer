@@ -16,11 +16,21 @@ const CommitCard = ({ commit, index, onClickMore }: CommitCardProps) => {
         <Col>
           <Row>
             <Col xs={1}>
-              <Image rounded src={commit.author.avatarUrl} alt="author-avatar" width={50} />
+              <Image
+                rounded
+                src={
+                  commit.author.avatarUrl ||
+                  'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg'
+                }
+                alt="author-avatar"
+                width={50}
+              />
             </Col>
             <Col>
               <Row>
-                <h4 className="text-dark">{commit.author.name}</h4>
+                <h4 className="text-dark">
+                  {commit?.author?.name || commit?.commit?.author?.name || 'API returned null author'}
+                </h4>
               </Row>
               <h6 className="mb-1 text-secondary">{commit.commit.author.date}</h6>
             </Col>
@@ -38,8 +48,10 @@ const CommitCard = ({ commit, index, onClickMore }: CommitCardProps) => {
         </Col>
       </Accordion.Header>
       <Accordion.Body>
+        <Row xs={6} className="justify-content-end">
+          <Button onClick={onClickMore}>More...</Button>
+        </Row>
         <ReactMarkdown>{commit.commit.message}</ReactMarkdown>
-        <Button onClick={onClickMore}>More data</Button>
       </Accordion.Body>
     </Accordion.Item>
   );
