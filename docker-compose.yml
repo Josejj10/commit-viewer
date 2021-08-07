@@ -25,7 +25,8 @@ services:
     command: yarn start
     volumes:
       - /frontend/src/styles
-      - /frontend/node-modules
+      - /frontend/node_modules
       - ./frontend/commit-viewer:/frontend
     ports:
       - 3000:3000
+    stdin_open: true

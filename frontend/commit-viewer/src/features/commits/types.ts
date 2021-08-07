@@ -18,6 +18,6 @@ export const commitsInitialState: ICommitsState = {
   commits: [],
   loading: false,
   error: null,
-  userName: 'facebook',
-  repoName: 'react',
+  userName: 'Josejj10',
+  repoName: 'commit-viewer',
 };

@@ -1,11 +1,12 @@
-FROM node:14
+FROM node:14.5.0
 RUN mkdir /frontend
 WORKDIR /frontend
 ENV PATH /frontend/node_modules/.bin:$PATH
 COPY ./package.json ./
 COPY ./yarn.lock ./
 RUN yarn
-ADD . .  
+RUN npm rebuild node-sass
+COPY . .  
 EXPOSE 3000
 
 # Final Stage
