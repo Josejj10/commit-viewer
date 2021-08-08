@@ -19,7 +19,7 @@ const CommitCard = ({ commit, index, onClickMore }: CommitCardProps) => {
               <Image
                 rounded
                 src={
-                  commit.author.avatarUrl ||
+                  commit?.author?.avatarUrl ||
                   'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg'
                 }
                 alt="author-avatar"

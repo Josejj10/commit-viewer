@@ -3,7 +3,6 @@ import ReactMarkdown from 'react-markdown';
 import { Button, Card, Col, Image, Modal, Row, Spinner, Tab, Tabs } from 'react-bootstrap';
 import { IGitCommit } from '../interfaces/git-commit.interface';
 import { IUser } from '../interfaces/user.interface';
-import { IGitCommitParent } from '../interfaces/commit-parent.interface';
 
 interface CommitModalProps {
   commit: IGitCommit | undefined;
@@ -19,7 +18,7 @@ export const UserCard = ({ user }: { user: IUser }) => (
         <Col xs={1} className="me-2">
           <Image
             rounded
-            src={user.avatarUrl || 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg'}
+            src={user?.avatarUrl || 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg'}
             alt="author-avatar"
             width={100}
             className="my-0"
@@ -29,10 +28,10 @@ export const UserCard = ({ user }: { user: IUser }) => (
           <h4 className="text-dark">
             {user?.htmlUrl ? (
               <a href={user?.htmlUrl} rel="noreferrer" target="_blank">
-                {user?.name || 'GitHub API returned null author'}
+                {user?.name || 'GitHub API returned null'}
               </a>
             ) : (
-              user?.name || 'GitHub API returned null author'
+              user?.name || 'GitHub API returned null'
             )}
           </h4>
           {user?.apiUrl && <p className="my-0">API Url: {user.apiUrl}</p>}
@@ -43,7 +42,22 @@ export const UserCard = ({ user }: { user: IUser }) => (
   </Card>
 );
 
-const CommitModal = ({ commit, show, handleClose }: CommitModalProps) => {
+const parentsList = (parents: any[]) => {
+  return parents.map((par: any, index: number) => (
+    <Card key={`parent-${par.url}`}>
+      <Card.Header>Parent #{index}</Card.Header>
+      <Card.Body>
+        Api: {par.url || par.node.url}
+        <br />
+        <a href={par.htmlUrl || par.node.htmlUrl} target="_blank" rel="noreferrer">
+          Show in GitHub
+        </a>
+      </Card.Body>
+    </Card>
+  ));
+};
+
+export const CommitModal = ({ commit, show, handleClose }: CommitModalProps) => {
   return (
     <Modal show={show} onHide={handleClose} size="xl">
       {commit === undefined ? (
@@ -111,17 +125,9 @@ const CommitModal = ({ commit, show, handleClose }: CommitModalProps) => {
               </Tab>
               <Tab className="py-3 px-2" eventKey="parents" title="Parents">
                 This commit was based on:
-                {commit?.parents.map((par: IGitCommitParent, index: number) => (
-                  <Card key={`parent-${par.url}`}>
-                    <Card.Header>Parent #{index}</Card.Header>
-                    <Card.Body>
-                      Api: {par.url}
-                      <a href={par.htmlUrl} target="_blank" rel="noreferrer">
-                        {par.htmlUrl}
-                      </a>
-                    </Card.Body>
-                  </Card>
-                ))}
+                {(commit?.parents as any)?.edges
+                  ? parentsList((commit?.parents as any).edges)
+                  : parentsList(commit?.parents)}
                 For more info about a git committer you can visit this{' '}
                 <a
                   href="https://stackoverflow.com/questions/38239521/what-is-the-parent-of-a-git-commit-how-can-there-be-more-than-one-parent-to-a-g"
@@ -144,5 +150,3 @@ const CommitModal = ({ commit, show, handleClose }: CommitModalProps) => {
     </Modal>
   );
 };
-
-export default CommitModal;

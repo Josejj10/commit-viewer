@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import HomeCard from '../components/HomeCard';
 import { commitsLoadAction } from '../features/commits/actions/load.actions';
+import { commitsSetShowTypeAction } from '../features/commits/actions/setType.actions';
 
 export const Home: React.FC = () => {
   const dispatch = useDispatch();
@@ -20,12 +21,17 @@ export const Home: React.FC = () => {
     history.push('commits');
   };
 
+  const setShowType = (showType: string) => {
+    dispatch(commitsSetShowTypeAction(showType));
+  };
+
   const cardsData = [
     {
       id: 1,
       title: 'Fetch Commits using React',
       text: `Show this project's list of commits connecting directly to the GitHub API from React.`,
       link: 'commits',
+      onButtonClick: () => setShowType('react'),
     },
     {
       id: 2,
@@ -33,6 +39,7 @@ export const Home: React.FC = () => {
       text:
         'Using a Django backend to connect to the GitHub API and transform it into a GraphQL schema that will be sent to this frontend.',
       link: 'commits',
+      onButtonClick: () => setShowType('django'),
     },
     {
       id: 3,

@@ -1,0 +1,238 @@
+schema {
+  query: Query
+  mutation: Mutations
+}
+
+type AuthorNode implements Node {
+  id: ID!
+  name: String!
+  email: String!
+  date: String!
+  commits(
+    offset: Int
+    before: String
+    after: String
+    first: Int
+    last: Int
+    message: String
+    message_Icontains: String
+    message_Istartswith: String
+    treeUrl: String
+    url: String
+    commentCount: Int
+    author: ID
+  ): CommitNodeConnection!
+}
+
+type AuthorNodeConnection {
+  pageInfo: PageInfo!
+  edges: [AuthorNodeEdge]!
+}
+
+type AuthorNodeEdge {
+  node: AuthorNode
+  cursor: String!
+}
+
+type CommitNode implements Node {
+  id: ID!
+  author: AuthorNode!
+  message: String!
+  treeUrl: String!
+  url: String!
+  commentCount: Int!
+  githubcommit: GitHubCommitNode
+}
+
+type CommitNodeConnection {
+  pageInfo: PageInfo!
+  edges: [CommitNodeEdge]!
+}
+
+type CommitNodeEdge {
+  node: CommitNode
+  cursor: String!
+}
+
+input GetCommitsInput {
+  userName: String!
+  repoName: String!
+  clientMutationId: String
+}
+
+type GetCommitsPayload {
+  commits: [GitHubCommitNode]
+  clientMutationId: String
+}
+
+type GitHubCommitNode implements Node {
+  id: ID!
+  author: UserNode
+  committer: UserNode
+  htmlUrl: String!
+  commentsUrl: String!
+  parents(
+    offset: Int
+    before: String
+    after: String
+    first: Int
+    last: Int
+    htmlUrl: String
+    url: String
+  ): GitHubCommitParentNodeConnection!
+  commit: CommitNode!
+}
+
+type GitHubCommitNodeConnection {
+  pageInfo: PageInfo!
+  edges: [GitHubCommitNodeEdge]!
+}
+
+type GitHubCommitNodeEdge {
+  node: GitHubCommitNode
+  cursor: String!
+}
+
+type GitHubCommitParentNode implements Node {
+  id: ID!
+  url: String!
+  htmlUrl: String!
+}
+
+type GitHubCommitParentNodeConnection {
+  pageInfo: PageInfo!
+  edges: [GitHubCommitParentNodeEdge]!
+}
+
+type GitHubCommitParentNodeEdge {
+  node: GitHubCommitParentNode
+  cursor: String!
+}
+
+type Mutations {
+  getCommits(input: GetCommitsInput!): GetCommitsPayload
+}
+
+interface Node {
+  id: ID!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+type Query {
+  author(id: ID!): AuthorNode
+  allAuthors(
+    offset: Int
+    before: String
+    after: String
+    first: Int
+    last: Int
+    name: String
+    name_Icontains: String
+    name_Istartswith: String
+    email: String
+    email_Icontains: String
+    date: String
+  ): AuthorNodeConnection
+  commit(id: ID!): CommitNode
+  allCommits(
+    offset: Int
+    before: String
+    after: String
+    first: Int
+    last: Int
+    message: String
+    message_Icontains: String
+    message_Istartswith: String
+    treeUrl: String
+    url: String
+    commentCount: Int
+    author: ID
+  ): CommitNodeConnection
+  user(id: ID!): UserNode
+  allUsers(
+    offset: Int
+    before: String
+    after: String
+    first: Int
+    last: Int
+    name: String
+    name_Icontains: String
+    name_Istartswith: String
+    gitId: String
+    gitId_Icontains: String
+    avatarUrl: String
+    apiUrl: String
+    htmlUrl: String
+    reposUrl: String
+    type: String
+    authorCommits: [ID]
+    committerCommits: [ID]
+  ): UserNodeConnection
+  gitHubCommit(id: ID!): GitHubCommitNode
+  allGithubcommits(
+    offset: Int
+    before: String
+    after: String
+    first: Int
+    last: Int
+    author: ID
+    committer: ID
+    htmlUrl: String
+    commentsUrl: String
+    parents: [ID]
+    commit: ID
+  ): GitHubCommitNodeConnection
+}
+
+type UserNode implements Node {
+  id: ID!
+  name: String!
+  gitId: String!
+  avatarUrl: String!
+  apiUrl: String!
+  htmlUrl: String!
+  reposUrl: String!
+  type: String!
+  authorCommits(
+    offset: Int
+    before: String
+    after: String
+    first: Int
+    last: Int
+    author: ID
+    committer: ID
+    htmlUrl: String
+    commentsUrl: String
+    parents: [ID]
+    commit: ID
+  ): GitHubCommitNodeConnection!
+  committerCommits(
+    offset: Int
+    before: String
+    after: String
+    first: Int
+    last: Int
+    author: ID
+    committer: ID
+    htmlUrl: String
+    commentsUrl: String
+    parents: [ID]
+    commit: ID
+  ): GitHubCommitNodeConnection!
+}
+
+type UserNodeConnection {
+  pageInfo: PageInfo!
+  edges: [UserNodeEdge]!
+}
+
+type UserNodeEdge {
+  node: UserNode
+  cursor: String!
+}

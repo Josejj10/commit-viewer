@@ -1,21 +1,48 @@
 import React, { useEffect, useState } from 'react';
 import { Accordion, Breadcrumb, Col, Nav, Row, Spinner, Tab } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
+import { useLazyLoadQuery } from 'react-relay/hooks';
 import CommitCard from '../components/CommitCard';
-import CommitModal from '../components/CommitModal';
+import { CommitModal } from '../components/CommitModal';
 import { SearchCommits } from '../components/SearchCommits';
 import { commitsLoadAction } from '../features/commits/actions/load.actions';
 import { IState } from '../features/reducers';
 import { IGitCommit } from '../interfaces/git-commit.interface';
+import { GetCommitsMutation } from '../features/services/commits.service';
+import { commitsSetShowTypeAction } from '../features/commits/actions/setType.actions';
+
+const CommitList = ({ commits, loading, selectCommit }: any) => {
+  if (loading) return <Spinner animation="border" role="status" />;
+  return (
+    <Accordion flush>
+      {commits.map((commit: IGitCommit, index: number) => (
+        <CommitCard
+          key={commit.commit.url}
+          commit={commit}
+          index={index}
+          onClickMore={(event: any) => selectCommit(event, commit)}
+        />
+      ))}
+    </Accordion>
+  );
+};
 
 export const Commits: React.FC = () => {
   const dispatch = useDispatch();
-  const { commits, error, loading, repoName, userName } = useSelector((state: IState) => state.commits);
+  const { commits, error, loading, repoName, userName, showType } = useSelector((state: IState) => state.commits);
   const [showModal, setshowModal] = useState(false);
   const [currentCommit, setCurrentCommit] = useState(undefined);
 
+  // GraphQL
+  let commitsGraphQL = { getCommits: { commits: [] } };
+  try {
+    commitsGraphQL = useLazyLoadQuery(GetCommitsMutation, { userName, repoName }) as any;
+  } catch {
+    commitsGraphQL = { getCommits: { commits: [] } };
+  }
+
   useEffect(() => {
-    if (commits.length < 1) dispatch(commitsLoadAction.request({ userName, repoName }));
+    if (commits.length < 0) dispatch(commitsLoadAction.request({ userName, repoName }));
   }, [dispatch, userName, repoName, commits]);
 
   const onSearchRepo = (data: any) => {
@@ -28,20 +55,8 @@ export const Commits: React.FC = () => {
     setCurrentCommit(commit);
   };
 
-  const CommitList = () => {
-    if (loading) return <Spinner animation="border" role="status" />;
-    return (
-      <Accordion flush>
-        {commits.map((commit: IGitCommit, index: number) => (
-          <CommitCard
-            key={commit.commit.url}
-            commit={commit}
-            index={index}
-            onClickMore={(event: any) => selectCommit(event, commit)}
-          />
-        ))}
-      </Accordion>
-    );
+  const setShowType = (type: string | null) => {
+    if (type) dispatch(commitsSetShowTypeAction(type));
   };
 
   return (
@@ -50,8 +65,9 @@ export const Commits: React.FC = () => {
         <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
         <Breadcrumb.Item active>Commits</Breadcrumb.Item>
       </Breadcrumb>
+
       <SearchCommits onSubmitForm={onSearchRepo} error={error} />
-      <Tab.Container id="left-tabs-example" defaultActiveKey="react">
+      <Tab.Container id="left-tabs-example" defaultActiveKey={showType} onSelect={k => setShowType(k)}>
         <Row className="mt-5">
           <Col sm={3}>
             <>
@@ -78,10 +94,12 @@ export const Commits: React.FC = () => {
           <Col sm={9}>
             <Tab.Content>
               <Tab.Pane eventKey="react">
-                <CommitList />
+                <p>Using axios and redux:</p>
+                <CommitList commits={commits} loading={loading} selectCommit={selectCommit} />
               </Tab.Pane>
               <Tab.Pane eventKey="django">
-                <CommitList />
+                <p>Using a Django backend with GraphQL and relay:</p>
+                <CommitList commits={commitsGraphQL.getCommits.commits} loading={loading} selectCommit={selectCommit} />
               </Tab.Pane>
             </Tab.Content>
           </Col>

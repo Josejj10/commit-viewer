@@ -4,6 +4,8 @@ export enum CommitsActionTypes {
   LOAD = '[COMMITS] Load',
   LOAD_SUCCESS = '[COMMITS] Load success',
   LOAD_FAIL = '[COMMITS] Load fail',
+
+  SET_SHOW_TYPE = '[COMMITS] Set show type',
 }
 
 export interface ICommitsState {
@@ -12,6 +14,7 @@ export interface ICommitsState {
   error: any;
   userName: string;
   repoName: string;
+  showType: string;
 }
 
 export const commitsInitialState: ICommitsState = {
@@ -20,4 +23,5 @@ export const commitsInitialState: ICommitsState = {
   error: null,
   userName: 'Josejj10',
   repoName: 'commit-viewer',
+  showType: 'react',
 };

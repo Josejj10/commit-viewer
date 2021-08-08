@@ -22,7 +22,8 @@
     // Custom disables
     "jsx-a11y/label-has-associated-control": "off",
     "react/jsx-props-no-spreading": "off",
-    "@typescript-eslint/lines-between-class-members": "off"
+    "@typescript-eslint/lines-between-class-members": "off",
+    "import/no-extraneous-dependencies": "off"
   },
   "overrides": [
     {
@@ -34,6 +35,6 @@
     }
   ],
   "settings": {
-    "import/core-modules": ["rxjs/operators"]
+    "import/core-modules": ["rxjs/operators", "react-relay/hooks"]
   }
 }

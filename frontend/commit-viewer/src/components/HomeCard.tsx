@@ -7,9 +7,10 @@ interface HomeCardProps {
   link?: string;
   children?: React.ReactNode;
   onSearch?: any;
+  onButtonClick?: any;
 }
 
-const HomeCard = ({ title, text, link, children, onSearch }: HomeCardProps) => {
+const HomeCard = ({ title, text, link, children, onSearch, onButtonClick }: HomeCardProps) => {
   return (
     <Card className="" border="primary" style={{ width: '20rem' }}>
       <Card.Header>
@@ -29,7 +30,7 @@ const HomeCard = ({ title, text, link, children, onSearch }: HomeCardProps) => {
         </Form>
       ) : (
         <Card.Footer>
-          <Button variant="primary" href={link}>
+          <Button variant="primary" href={link} onClick={onButtonClick}>
             Try it out!
           </Button>
         </Card.Footer>
@@ -44,6 +45,7 @@ HomeCard.defaultProps = {
   link: '',
   children: '',
   onSearch: () => undefined,
+  onButtonClick: () => undefined,
 };
 
 export default HomeCard;
