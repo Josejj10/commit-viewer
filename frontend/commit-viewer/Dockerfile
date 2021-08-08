@@ -4,6 +4,7 @@ WORKDIR /frontend
 ENV PATH /frontend/node_modules/.bin:$PATH
 ENV NODE_ENV=development
 COPY ./package.json ./
+RUN yarn add -g relay-compiler
 RUN yarn
 COPY . .  
 EXPOSE 3000

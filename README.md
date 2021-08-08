@@ -5,7 +5,16 @@ Commit Viewer is a full-stack project that uses GitHub's API to show commits. It
 ## Installation
 
 You need to have [Docker installed](https://www.docker.com/get-started).  
-Then, clone this repo and just run:
+Then, clone this repo and:
+
+1. Bash into frontend/commit-viewer and run yarn install
+
+```bash
+cd frontend/commit-viewer
+yarn install
+```
+
+2. After that, just run:
 
 #### Windows:
 

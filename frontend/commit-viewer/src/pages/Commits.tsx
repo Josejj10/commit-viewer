@@ -34,12 +34,7 @@ export const Commits: React.FC = () => {
   const [currentCommit, setCurrentCommit] = useState(undefined);
 
   // GraphQL
-  let commitsGraphQL = { getCommits: { commits: [] } };
-  try {
-    commitsGraphQL = useLazyLoadQuery(GetCommitsMutation, { userName, repoName }) as any;
-  } catch {
-    commitsGraphQL = { getCommits: { commits: [] } };
-  }
+  const commitsGraphQL = useLazyLoadQuery(GetCommitsMutation, { userName, repoName }) as any;
 
   useEffect(() => {
     if (commits.length < 0) dispatch(commitsLoadAction.request({ userName, repoName }));
