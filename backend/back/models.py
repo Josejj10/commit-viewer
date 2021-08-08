@@ -5,7 +5,7 @@ from django.db import models
 class Author(models.Model):
     name = models.CharField(max_length=200)  # name
     email = models.CharField(max_length=200)  # email
-    date = models.DateTimeField()  # date
+    date = models.CharField(max_length=100)  # date
 
     def __str__(self):
         return f'{self.name}@{self.date} ({self.email})'
@@ -48,8 +48,9 @@ class GitHubCommitParent(models.Model):
 
 # GitHub Commit
 class GitHubCommit(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_commits')  # author
-    committer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='committer_commits')  # committer
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_commits', null=True)  # author
+    committer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='committer_commits',
+                                  null=True)  # committer
     htmlUrl = models.URLField()  # html_url
     commentsUrl = models.URLField()  # comments_url
     parents = models.ManyToManyField(GitHubCommitParent, related_name='children', symmetrical=True)  # parents
@@ -57,4 +58,3 @@ class GitHubCommit(models.Model):
 
     def __str__(self):
         return f'{self.author.name}: {self.commit}'
-

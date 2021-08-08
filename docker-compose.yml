@@ -22,10 +22,9 @@ services:
   frontend:
     container_name: frontend
     build: ./frontend/commit-viewer
-    command: yarn start
+    command: bash -c "npm rebuild node-sass && yarn start"
     volumes:
-      - /frontend/src/styles
-      - /frontend/node_modules
+      - /frontend/commit-viewer/node_modules
       - ./frontend/commit-viewer:/frontend
     ports:
       - 3000:3000

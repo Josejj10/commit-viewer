@@ -6,10 +6,13 @@ git_root_api = "https://api.github.com"
 
 def get_parent(git_commit, rawParent):
     parent = GitHubCommitParent.objects.get_or_create(url=rawParent['url'], html_url=rawParent['html_url'])[0]
-    git_commit.parents.add(parent)
+    parent.children.add(git_commit)
 
 
 def get_user(raw_user):
+    if raw_user is None:
+        return None, None
+
     return User.objects.get_or_create(name=raw_user['login'], gitId=raw_user['id'], avatarUrl=raw_user['avatar_url'],
                                       apiUrl=raw_user['url'], htmlUrl=raw_user['html_url'],
                                       reposUrl=raw_user['repos_url'], type=raw_user['type'])
@@ -29,7 +32,9 @@ def map_git_commit(raw_data):
                                                          htmlUrl=raw_data['html_url'],
                                                          commentsUrl=raw_data['comments_url'],
                                                          commit=commit)
-    map(lambda parent: get_parent(git_commit, parent),raw_data['parents'])
+    for result in map(lambda parent: get_parent(git_commit, parent), raw_data['parents']):
+        pass
+
     return git_commit
 
 

@@ -16,7 +16,7 @@ class AuthorNode(DjangoObjectType):
             'email': ['exact', 'icontains'],
             'date': ['exact'],
         }
-        interfaces = (relay.Node, )
+        interfaces = (relay.Node,)
 
 
 # GraphQL for Commit
@@ -30,7 +30,7 @@ class CommitNode(DjangoObjectType):
             'comment_count': ['exact'],
             'author': ['exact'],
         }
-        interfaces = (relay.Node, )
+        interfaces = (relay.Node,)
 
 
 # GraphQL for User
@@ -48,7 +48,7 @@ class UserNode(DjangoObjectType):
             'author_commits': ['exact'],
             'committer_commits': ['exact']
         }
-        interfaces = (relay.Node, )
+        interfaces = (relay.Node,)
 
 
 # GraphQL for GitHub Commit Parent
@@ -59,7 +59,7 @@ class GitHubCommitParentNode(DjangoObjectType):
             'html_url': ['exact'],
             'url': ['exact'],
         }
-        interfaces = (relay.Node, )
+        interfaces = (relay.Node,)
 
 
 # GraphQL for GitHub Commit
@@ -74,17 +74,17 @@ class GitHubCommitNode(DjangoObjectType):
             'parents': ['exact'],
             'commit': ['exact']
         }
-        interfaces = (relay.Node, )
+        interfaces = (relay.Node,)
 
 
 # GraphQL Mutation to get commits using user and repo names
 class GetCommits(relay.ClientIDMutation):
-
     class Input:
         user_name = graphene.String(required=True)
         repo_name = graphene.String(required=True)
 
     commits = graphene.List(GitHubCommitNode)
+
     # https://docs.graphene-python.org/en/latest/relay/mutations/
 
     @classmethod
@@ -95,11 +95,13 @@ class GetCommits(relay.ClientIDMutation):
         return GetCommits(commits=commits)
 
 
-# GraphQL Mutation to search for users
+# Idea: GraphQL Mutation to search for users
 # class SearchUsers(relay.ClientIDMutation):
 
-# GraphQL Mutation to search for user's repos
+# Idea: GraphQL Mutation to search for user's repos
 # class SearchUserRepos(relay.ClientIDMutation):
+
+
 class Query(ObjectType):
     author = relay.Node.Field(AuthorNode)
     all_authors = DjangoFilterConnectionField(AuthorNode)
