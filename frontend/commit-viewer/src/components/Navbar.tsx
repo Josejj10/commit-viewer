@@ -1,8 +1,8 @@
 import React from 'react';
 import BsNavBar from 'react-bootstrap/Navbar';
 import { Container, Nav, NavDropdown } from 'react-bootstrap';
-import { commitsLoadAction } from '../features/commits/actions/load.actions';
 import { useDispatch } from 'react-redux';
+import { commitsLoadAction } from '../features/commits/actions/load.actions';
 
 export const Navbar: React.FC = () => {
   const dispatch = useDispatch();
